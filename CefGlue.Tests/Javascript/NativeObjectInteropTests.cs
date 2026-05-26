@@ -141,12 +141,12 @@ namespace CefGlue.Tests.Javascript
 
             public DateTime MethodWithDateTimeReturn()
             {
-                return DateTime.Parse(Date);
+                return DateTime.Parse(Date, null, System.Globalization.DateTimeStyles.RoundtripKind);
             }
 
             public Person MethodWithObjectReturn()
             {
-                return new Person() {Name = "John", Age = 30, BirthDate = DateTime.Parse(Date)};
+                return new Person() {Name = "John", Age = 30, BirthDate = DateTime.Parse(Date, null, System.Globalization.DateTimeStyles.RoundtripKind)};
             }
         }
 
@@ -208,7 +208,7 @@ namespace CefGlue.Tests.Javascript
             Assert.AreEqual(4, result.Length);
             Assert.AreEqual(Arg1, result[0]);
             Assert.AreEqual(Arg2, result[1]);
-            Assert.AreEqual(DateTime.Parse(Date), result[2]);
+            Assert.AreEqual(DateTime.Parse(Date, null, System.Globalization.DateTimeStyles.RoundtripKind), result[2]);
             Assert.AreEqual(true, result[3]);
         }
 
@@ -297,7 +297,7 @@ namespace CefGlue.Tests.Javascript
             var arg = (Person) result[0];
             Assert.AreEqual("cef", arg.Name);
             Assert.AreEqual(10, arg.Age);
-            Assert.AreEqual(DateTime.Parse(Date), arg.BirthDate);
+            Assert.AreEqual(DateTime.Parse(Date, null, System.Globalization.DateTimeStyles.RoundtripKind), arg.BirthDate);
         }
 
         [Test]
