@@ -199,22 +199,29 @@ namespace Xilium.CefGlue.Avalonia
         public static CefDragData GetDragData(this DragEventArgs e)
         {
             var dragData = CefDragData.Create();
+            var dataTransfer = e.DataTransfer;
 
             // Files
-            if (e.Data.Contains(DataFormats.FileNames))
+            if (dataTransfer.Contains(DataFormat.File))
             {
-                var files = (string[])e.Data.GetFileNames();
-                foreach (var filePath in files)
+                foreach (var item in dataTransfer.Items)
                 {
-                    var displayName = Path.GetFileName(filePath);
-                    dragData.AddFile(filePath.Replace("\\", "/"), displayName);
+                    if (item.TryGetValue(DataFormat.File) is global::Avalonia.Platform.Storage.IStorageItem storageItem && storageItem.Path.IsFile)
+                    {
+                        var filePath = storageItem.Path.LocalPath;
+                        if (!string.IsNullOrEmpty(filePath))
+                        {
+                            var displayName = Path.GetFileName(filePath);
+                            dragData.AddFile(filePath.Replace("\\", "/"), displayName);
+                        }
+                    }
                 }
             }
 
             // Text
-            if (e.Data.Contains(DataFormats.Text))
+            if (dataTransfer.Contains(DataFormat.Text))
             {
-                dragData.SetFragmentText(e.Data.GetText());
+                dragData.SetFragmentText(dataTransfer.TryGetText());
             }
 
             return dragData;
