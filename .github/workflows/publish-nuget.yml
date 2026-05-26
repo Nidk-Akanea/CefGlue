@@ -28,12 +28,20 @@ jobs:
       - name: Restore
         run: dotnet restore CefGlue.Avalonia/CefGlue.Avalonia.csproj
 
+      - name: Build
+        run: |
+          dotnet build CefGlue.Avalonia/CefGlue.Avalonia.csproj \
+            -c Release \
+            /p:Version="${{ env.PACKAGE_VERSION }}" \
+            --no-restore
+
       - name: Pack
         run: |
           dotnet pack CefGlue.Avalonia/CefGlue.Avalonia.csproj \
             -c Release \
             /p:Version="${{ env.PACKAGE_VERSION }}" \
             --no-restore \
+            --no-build \
             --output ./nupkg
 
       - name: Push to GitHub Packages
